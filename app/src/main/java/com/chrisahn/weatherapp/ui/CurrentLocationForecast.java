@@ -19,6 +19,7 @@ import com.chrisahn.weatherapp.weather.Current;
 import com.chrisahn.weatherapp.weather.Day;
 import com.chrisahn.weatherapp.weather.Forecast;
 import com.chrisahn.weatherapp.weather.Hour;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -64,21 +65,12 @@ public class CurrentLocationForecast extends ActionBarActivity implements
 
         mProgressBar.setVisibility(View.INVISIBLE);
 
-/*        if (isGpsOn()) {
-            Toast.makeText(this, mLatitude + " " + mLongitude, Toast.LENGTH_LONG).show();
-            getLocationForecast(mLatitude, mLongitude);
-        }
-        else {
-            Toast.makeText(this, "GPS is disabled. Please enable GPS", Toast.LENGTH_LONG).show();
-        }
-
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getLocationForecast(mLatitude, mLongitude);
             }
-        }); */
-
+        });
     }
 
     @Override
@@ -99,22 +91,7 @@ public class CurrentLocationForecast extends ActionBarActivity implements
 
         mLatitude  = location.getLatitude();
         mLongitude = location.getLongitude();
-
-        if (isGpsOn()) {
-            Toast.makeText(this, mLatitude + " " + mLongitude, Toast.LENGTH_LONG).show();
-            getLocationForecast(mLatitude, mLongitude);
-        }
-        else {
-            Toast.makeText(this, "GPS is disabled. Please enable GPS", Toast.LENGTH_LONG).show();
-        }
-
-        mRefreshImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getLocationForecast(mLatitude, mLongitude);
-            }
-        });
-        //LatLng latLng = new LatLng(mLatitude, mLongitude);
+        LatLng latLng = new LatLng(mLatitude, mLongitude);
     }
 
     public void getLocationForecast(double latitude, double longitude) {
@@ -122,59 +99,66 @@ public class CurrentLocationForecast extends ActionBarActivity implements
         String url = "https://api.forecast.io/forecast/" + ApiKey +"/" + latitude
                 + "," + longitude;
 
-        // Requesting url
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        Call response = client.newCall(request);
-        // Call in background
-        response.enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        toggleRefresh();
-                    }
-                }); alertUserError();
-            }
+        if (isGpsOn()) {
+            // First toggle to show progressbar
+            toggleRefresh();
 
-            @Override
-            public void onResponse(Response response) throws IOException {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //toggleRefresh();
-                    }
-                });
-                try {
-                    String jsonData = response.body().string();
-                    Log.v(TAG, jsonData);
-                    if (response.isSuccessful()) {
-                        mForecast = parseForecastData(jsonData);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateDisplay();
-                            }
-                        });
-
-
-                    } else {
-                        alertUserError();
-                    }
-                }
-                catch (IOException e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                }
-                catch (JSONException e) {
-                    Log.e(TAG, "Exception caught: ", e);
+            // Requesting url
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            Call response = client.newCall(request);
+            // Call in background
+            response.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Second toggle to stop progressbar when there is a response
+                            toggleRefresh();
+                        }
+                    });
+                    alertUserError();
                 }
 
-            }
-        });
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            toggleRefresh();
+                        }
+                    });
+                    try {
+                        String jsonData = response.body().string();
+                        Log.v(TAG, jsonData);
+                        if (response.isSuccessful()) {
+                            mForecast = parseForecastData(jsonData);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateDisplay();
+                                }
+                            });
 
+
+                        } else {
+                            alertUserError();
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "Exception caught: ", e);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Exception caught: ", e);
+                    }
+
+                }
+            });
+        }
+        else {
+            Toast.makeText(this, "GPS is disabled. Please enable GPS", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updateDisplay() {
