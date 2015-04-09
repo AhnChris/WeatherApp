@@ -10,4 +10,6 @@
     <string name="title_activity_daily_forecast">DailyForecastActivity</string>
     <string name="no_daily_forecast_data">There is no data to display.</string>
     <string name="title_activity_hourly_forecast">HourlyForecastActivity</string>
+    <string name="title_activity_current_location_forecast">CurrentLocationForecast</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

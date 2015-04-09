@@ -5,8 +5,9 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context=".MainActivity"
-                android:background="@drawable/bg_gradient">
+                tools:context="com.chrisahn.weatherapp.ui.CurrentLocationForecast"
+                android:background="@drawable/bg_gradient" >
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="San Francisco, CA"
+        android:text="--"
         android:id="@+id/locationLabel"
         android:layout_above="@+id/timeLabel"
         android:layout_centerHorizontal="true"
@@ -173,16 +174,5 @@
             android:textColor="#ffffffff"
             android:layout_marginLeft="2dp" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Location Weather"
-        android:id="@+id/currentLocationLabel"
-        android:layout_below="@+id/iconImageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:textSize="15sp"
-        />
 
 </RelativeLayout>
