@@ -17,7 +17,8 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +29,7 @@
             android:name=".ui.DailyForecastActivity"
             android:label="@string/title_activity_daily_forecast"
             android:parentActivityName=".ui.MainActivity"
-            android:screenOrientation="portrait" >
+             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
@@ -44,7 +45,8 @@
         </activity>
         <activity
             android:name=".ui.CurrentLocationForecastActivity"
-            android:label="@string/title_activity_current_location_forecast" >
+            android:label="@string/title_activity_current_location_forecast"
+            android:screenOrientation="portrait">
         </activity>
 
         <meta-data
@@ -56,11 +58,13 @@
 
         <activity
             android:name=".ui.DailyLocationForecastActivity"
-            android:label="@string/title_activity_daily_location_forecast" >
+            android:label="@string/title_activity_daily_location_forecast"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.HourlyLocationForecastActivity"
-            android:label="@string/title_activity_hourly_location_forecast" >
+            android:label="@string/title_activity_hourly_location_forecast"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
