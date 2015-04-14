@@ -43,7 +43,7 @@
                 android:value=".ui.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.CurrentLocationForecast"
+            android:name=".ui.CurrentLocationForecastActivity"
             android:label="@string/title_activity_current_location_forecast" >
         </activity>
 
@@ -54,6 +54,14 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity
+            android:name=".ui.DailyLocationForecastActivity"
+            android:label="@string/title_activity_daily_location_forecast" >
+        </activity>
+        <activity
+            android:name=".ui.HourlyLocationForecastActivity"
+            android:label="@string/title_activity_hourly_location_forecast" >
+        </activity>
     </application>
 
 </manifest>

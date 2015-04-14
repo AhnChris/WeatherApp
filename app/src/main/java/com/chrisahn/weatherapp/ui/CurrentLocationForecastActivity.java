@@ -1,6 +1,7 @@
 package com.chrisahn.weatherapp.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -34,20 +35,31 @@ import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
-public class CurrentLocationForecast extends ActionBarActivity implements
+public class CurrentLocationForecastActivity extends ActionBarActivity implements
         LocationProvider.LocationCallback {
 
-    private static final String TAG = CurrentLocationForecast.class.getSimpleName();
+    private static final String TAG = CurrentLocationForecastActivity.class.getSimpleName();
+    public static final String DAILY_FORECAST_LOC = "DAILY_FORECAST_LOC";
+    public static final String HOURLY_FORECAST_LOC = "HOURLY_FORECAST_LOC";
 
-    @InjectView(R.id.timeLabel) TextView mTimeLabel;
-    @InjectView(R.id.temperatureLabel) TextView mTemperatureLabel;
-    @InjectView(R.id.humidityValue) TextView mHumidityValue;
-    @InjectView(R.id.precipValue) TextView mPrecipValue;
-    @InjectView(R.id.summaryLabel) TextView mSummaryLabel;
-    @InjectView(R.id.iconImageView) ImageView mIconImageView;
-    @InjectView(R.id.refreshImageView) ImageView mRefreshImageView;
-    @InjectView(R.id.progressBar) ProgressBar mProgressBar;
+    @InjectView(R.id.timeLabel)
+    TextView mTimeLabel;
+    @InjectView(R.id.temperatureLabel)
+    TextView mTemperatureLabel;
+    @InjectView(R.id.humidityValue)
+    TextView mHumidityValue;
+    @InjectView(R.id.precipValue)
+    TextView mPrecipValue;
+    @InjectView(R.id.summaryLabel)
+    TextView mSummaryLabel;
+    @InjectView(R.id.iconImageView)
+    ImageView mIconImageView;
+    @InjectView(R.id.refreshImageView)
+    ImageView mRefreshImageView;
+    @InjectView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     private double mLatitude;
     private double mLongitude;
@@ -89,14 +101,14 @@ public class CurrentLocationForecast extends ActionBarActivity implements
     public void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
 
-        mLatitude  = location.getLatitude();
+        mLatitude = location.getLatitude();
         mLongitude = location.getLongitude();
         LatLng latLng = new LatLng(mLatitude, mLongitude);
     }
 
     public void getLocationForecast(double latitude, double longitude) {
         String ApiKey = "f4a73f20558d9eba16d1a065c44a5b4d";
-        String url = "https://api.forecast.io/forecast/" + ApiKey +"/" + latitude
+        String url = "https://api.forecast.io/forecast/" + ApiKey + "/" + latitude
                 + "," + longitude;
 
         if (isGpsOn()) {
@@ -155,8 +167,7 @@ public class CurrentLocationForecast extends ActionBarActivity implements
 
                 }
             });
-        }
-        else {
+        } else {
             Toast.makeText(this, "GPS is disabled. Please enable GPS", Toast.LENGTH_LONG).show();
         }
     }
@@ -247,7 +258,7 @@ public class CurrentLocationForecast extends ActionBarActivity implements
     // Check to see if GPS is enabled
     public boolean isGpsOn() {
         boolean gpsAvail = false;
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
         if (gpsStatus) {
@@ -260,8 +271,7 @@ public class CurrentLocationForecast extends ActionBarActivity implements
         if (mProgressBar.getVisibility() == View.INVISIBLE) {
             mProgressBar.setVisibility(View.VISIBLE);
             mRefreshImageView.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             mProgressBar.setVisibility(View.INVISIBLE);
             mRefreshImageView.setVisibility(View.VISIBLE);
         }
@@ -269,6 +279,20 @@ public class CurrentLocationForecast extends ActionBarActivity implements
 
     public void alertUserError() {
         AlertDialogFragment dialog = new AlertDialogFragment();
-        dialog.show(getFragmentManager(),"error_dialog");
+        dialog.show(getFragmentManager(), "error_dialog");
+    }
+
+    @OnClick(R.id.dailyButton)
+    public void gotoDailyForecast() {
+        Intent intent = new Intent(this, DailyLocationForecastActivity.class);
+        intent.putExtra(DAILY_FORECAST_LOC, mForecast.getDailyForecast());
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.hourlyButton)
+    public void gotoHourlyForecast() {
+        Intent intent = new Intent(this, HourlyLocationForecastActivity.class);
+        intent.putExtra(HOURLY_FORECAST_LOC, mForecast.getHourlyForecast());
+        startActivity(intent);
     }
 }

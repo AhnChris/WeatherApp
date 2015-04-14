@@ -12,4 +12,6 @@
     <string name="title_activity_hourly_forecast">HourlyForecastActivity</string>
     <string name="title_activity_current_location_forecast">CurrentLocationForecast</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_daily_location_forecast">DailyLocationForecast</string>
+    <string name="title_activity_hourly_location_forecast">HourlyLocationForecastActivity</string>
 </resources>
