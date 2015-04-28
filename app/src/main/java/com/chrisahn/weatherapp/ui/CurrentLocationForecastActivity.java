@@ -3,6 +3,8 @@ package com.chrisahn.weatherapp.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -32,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -44,22 +48,15 @@ public class CurrentLocationForecastActivity extends ActionBarActivity implement
     public static final String DAILY_FORECAST_LOC = "DAILY_FORECAST_LOC";
     public static final String HOURLY_FORECAST_LOC = "HOURLY_FORECAST_LOC";
 
-    @InjectView(R.id.timeLabel)
-    TextView mTimeLabel;
-    @InjectView(R.id.temperatureLabel)
-    TextView mTemperatureLabel;
-    @InjectView(R.id.humidityValue)
-    TextView mHumidityValue;
-    @InjectView(R.id.precipValue)
-    TextView mPrecipValue;
-    @InjectView(R.id.summaryLabel)
-    TextView mSummaryLabel;
-    @InjectView(R.id.iconImageView)
-    ImageView mIconImageView;
-    @InjectView(R.id.refreshImageView)
-    ImageView mRefreshImageView;
-    @InjectView(R.id.progressBar)
-    ProgressBar mProgressBar;
+    @InjectView(R.id.timeLabel)TextView mTimeLabel;
+    @InjectView(R.id.temperatureLabel)TextView mTemperatureLabel;
+    @InjectView(R.id.humidityValue)TextView mHumidityValue;
+    @InjectView(R.id.precipValue)TextView mPrecipValue;
+    @InjectView(R.id.summaryLabel)TextView mSummaryLabel;
+    @InjectView(R.id.iconImageView)ImageView mIconImageView;
+    @InjectView(R.id.refreshImageView)ImageView mRefreshImageView;
+    @InjectView(R.id.progressBar)ProgressBar mProgressBar;
+    @InjectView(R.id.locationLabel) TextView mLocationLabel;
 
     private double mLatitude;
     private double mLongitude;
@@ -183,6 +180,7 @@ public class CurrentLocationForecastActivity extends ActionBarActivity implement
         Drawable drawable = getResources().getDrawable(current.getIconId());
         mIconImageView.setImageDrawable(drawable);
 
+        mLocationLabel.setText(getMyLocation());
     }
 
     private Forecast parseForecastData(String jsonData) throws JSONException {
@@ -280,6 +278,21 @@ public class CurrentLocationForecastActivity extends ActionBarActivity implement
     public void alertUserError() {
         AlertDialogFragment dialog = new AlertDialogFragment();
         dialog.show(getFragmentManager(), "error_dialog");
+    }
+
+    public String getMyLocation() {
+
+        // Reverse Geocode the Latitude/Longitude values that we already have from finding our location
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(mLatitude, mLongitude, 1);
+            String myAddress = addresses.get(0).getLocality();
+            return myAddress;
+        } catch (IOException e) {
+            Log.e(TAG, "Exception caught: ", e);
+        }
+
+        return "Unknown";
     }
 
     @OnClick(R.id.dailyButton)

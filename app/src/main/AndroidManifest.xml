@@ -66,6 +66,7 @@
             android:label="@string/title_activity_hourly_location_forecast"
             android:screenOrientation="portrait">
         </activity>
+
     </application>
 
 </manifest>
