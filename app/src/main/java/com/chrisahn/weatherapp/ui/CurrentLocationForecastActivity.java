@@ -47,6 +47,7 @@ public class CurrentLocationForecastActivity extends ActionBarActivity implement
     private static final String TAG = CurrentLocationForecastActivity.class.getSimpleName();
     public static final String DAILY_FORECAST_LOC = "DAILY_FORECAST_LOC";
     public static final String HOURLY_FORECAST_LOC = "HOURLY_FORECAST_LOC";
+    public static final String LOCATION_NAME = "LOCATION_NAME";
 
     @InjectView(R.id.timeLabel)TextView mTimeLabel;
     @InjectView(R.id.temperatureLabel)TextView mTemperatureLabel;
@@ -286,8 +287,7 @@ public class CurrentLocationForecastActivity extends ActionBarActivity implement
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(mLatitude, mLongitude, 1);
-            String myAddress = addresses.get(0).getLocality();
-            return myAddress;
+            return addresses.get(0).getLocality();
         } catch (IOException e) {
             Log.e(TAG, "Exception caught: ", e);
         }
@@ -299,6 +299,7 @@ public class CurrentLocationForecastActivity extends ActionBarActivity implement
     public void gotoDailyForecast() {
         Intent intent = new Intent(this, DailyLocationForecastActivity.class);
         intent.putExtra(DAILY_FORECAST_LOC, mForecast.getDailyForecast());
+        intent.putExtra(LOCATION_NAME, getMyLocation());
         startActivity(intent);
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chrisahn.weatherapp.R;
@@ -14,16 +15,27 @@ import com.chrisahn.weatherapp.weather.Day;
 
 import java.util.Arrays;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class DailyLocationForecastActivity extends ListActivity {
 
     private Day[] mDays;
+    private String mLocationName;
+
+    @InjectView(R.id.locationLabel)TextView mLocationLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_location_forecast);
+        ButterKnife.inject(this);
 
         Intent intent = getIntent();
+
+        mLocationName = intent.getStringExtra(CurrentLocationForecastActivity.LOCATION_NAME);
+        mLocationLabel.setText(mLocationName);
+
 
         //Getting parcelable array from the intent
         Parcelable[] parcelables = intent.getParcelableArrayExtra(CurrentLocationForecastActivity.DAILY_FORECAST_LOC);
