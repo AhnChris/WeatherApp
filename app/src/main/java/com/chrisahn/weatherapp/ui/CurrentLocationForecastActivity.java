@@ -81,6 +81,8 @@ public class CurrentLocationForecastActivity extends ActionBarActivity implement
                 getLocationForecast(mLatitude, mLongitude);
             }
         });
+
+        getLocationForecast(mLatitude, mLongitude);
     }
 
     @Override
